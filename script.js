@@ -579,4 +579,37 @@
   modal.addEventListener("click", (e) => { if (e.target === modal) modal.hidden = true; });
 
   window.addEventListener("pagehide", stopCamera);
+
+  // =========================================================
+  //  VISITOR COUNTER — "あなたは N人目の餌です"
+  // =========================================================
+  const VISIT_URL = "https://abacus.jasoncameron.dev/hit/ika-upa-esa-shindan-2026/visits";
+  function animateCount(el, to) {
+    const dur = 1000, t0 = performance.now();
+    const from = Math.max(0, to - Math.min(to, 40)); // count up the final stretch
+    (function step(t) {
+      const p = Math.min(1, (t - t0) / dur);
+      const v = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3)));
+      el.textContent = v.toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  async function initVisitor() {
+    const el = document.getElementById("visitorNum");
+    // count each visitor once per browser session
+    const cached = sessionStorage.getItem("upa.visit");
+    if (cached) { animateCount(el, parseInt(cached, 10)); return; }
+    let n = null;
+    try {
+      const res = await fetch(VISIT_URL, { cache: "no-store" });
+      if (res.ok) n = (await res.json()).value;
+    } catch { /* offline or blocked */ }
+    if (n == null) { // fallback: local-only tally so the line still works
+      n = parseInt(localStorage.getItem("upa.visitLocal") || "0", 10) + 1;
+      localStorage.setItem("upa.visitLocal", String(n));
+    }
+    sessionStorage.setItem("upa.visit", String(n));
+    animateCount(el, n);
+  }
+  initVisitor();
 })();

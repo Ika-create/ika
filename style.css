@@ -72,6 +72,12 @@ body::before{
 
 /* ---- intro ---- */
 .intro-card{text-align:center;}
+.visitor{
+  display:inline-block;margin:0 0 12px;padding:6px 14px;border-radius:20px;
+  background:#f2eefb;border:1px solid #e4dcf5;color:var(--sub);
+  font-size:12.5px;font-weight:700;letter-spacing:.2px;
+}
+.visitor b{color:var(--purple);font-size:15px;font-variant-numeric:tabular-nums;}
 .intro-card h1{font-size:23px;line-height:1.5;margin:8px 0 14px;font-weight:800;letter-spacing:.2px;}
 .intro-card h1 .hl{
   background:linear-gradient(120deg,#e8607a,#e8859a);
