@@ -283,6 +283,24 @@ body::before{
 .pct{text-align:right;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums;}
 .note{font-size:11px;color:#9a9aae;text-align:right;margin:16px 0 16px;}
 
+/* ---- 赤虫との栄養比較 ---- */
+.compare{margin-top:20px;padding-top:18px;border-top:1px dashed #e4e4ee;}
+.cmp-title{font-size:14px;font-weight:800;margin:0;}
+.cmp-title::before{content:"🩸 ";}
+.cmp-rows{display:flex;flex-direction:column;gap:12px;margin:14px 0;}
+.cmp-name{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.cmp-line{display:grid;grid-template-columns:44px 1fr 40px;align-items:center;gap:8px;font-size:11.5px;margin-bottom:4px;}
+.cmp-who{color:var(--sub);font-weight:600;}
+.cmp-track{height:9px;background:#ececf2;border-radius:6px;overflow:hidden;}
+.cmp-fill{height:100%;width:0;border-radius:6px;transition:width 1s cubic-bezier(.22,1,.36,1);}
+.cmp-fill.you{background:linear-gradient(90deg,#ccccd8,#b1b1c3);}
+.cmp-fill.worm{background:linear-gradient(90deg,#d84a3c,#8e1b2a);}
+.cmp-val{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;}
+.cmp-verdict{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  background:#fbeef0;border:1px solid #f2d3d8;border-radius:12px;padding:10px 14px;}
+.cmp-score,.cmp-shame{font-weight:800;font-size:13px;color:#a01f2e;font-variant-numeric:tabular-nums;}
+.cmp-msg{font-size:12.5px;color:var(--sub);margin:10px 2px 0;text-align:center;font-weight:600;}
+
 .result-actions{display:flex;flex-direction:column;gap:10px;}
 .ghost-btn{
   width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;

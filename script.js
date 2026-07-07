@@ -247,7 +247,80 @@
     if (lastShot) { baitFace.src = lastShot; scene.style.display = ""; }
     else { scene.style.display = "none"; }
 
+    renderComparison(r);
+
     window._lastResult = r;
+  }
+
+  // =========================================================
+  //  赤虫との栄養比較 — you always fall short of a bloodworm
+  // =========================================================
+  const COMPARE = ["たんぱく質", "消化のよさ", "手軽さ", "コスパ", "食いつき"];
+  // closing lines, grouped by how badly you lost — one is picked at random
+  const CMP_MSGS = {
+    high: [
+      "完敗。あなたは餌としても、赤虫の足元にも及びません。",
+      "全項目で惨敗。ウーパールーパーは見向きもしないでしょう。",
+      "赤虫の圧勝。あなたは水槽に落ちても無視される存在です。",
+      "話になりません。赤虫を見習ってから出直してください。",
+      "栄養も食いつきも完敗。あなたの価値は赤虫一匹以下でした。",
+      "ぐうの音も出ない大敗。餌を名乗るのはおこがましいレベルです。",
+    ],
+    mid: [
+      "赤虫に遠く及ばず。ウーパールーパーが選ぶのは、やっぱり赤虫です。",
+      "健闘むなしく敗北。あと一歩どころか、まだまだ赤虫には遠いです。",
+      "赤虫のほうが優秀でした。あなたが主食になる未来は見えません。",
+      "残念、赤虫の勝ち。冷凍庫の赤虫にすら勝てませんでした。",
+      "赤虫に軍配。あなたは非常用のさらに予備、といったところです。",
+      "力及ばず。ウーパールーパーの前では、赤虫の引き立て役です。",
+    ],
+    low: [
+      "赤虫の勝ち。あなたが選ばれる日は、当分来なさそうです。",
+      "惜しくも赤虫に届かず。選ばれるにはまだ何かが足りません。",
+      "接戦ながら赤虫の勝ち。あと少しの努力が、餌としては致命的でした。",
+      "僅差で敗北。それでも、赤虫が選ばれることに変わりはありません。",
+      "赤虫にリード許す。あなたの出番は、赤虫が売り切れた日だけかも。",
+      "赤虫優勢。今日のところは、おかず未満で終わりました。",
+    ],
+  };
+  function renderComparison(r) {
+    const rows = COMPARE.map(name => {
+      const worm = rnd(80, 96);
+      // your value is tied to the diagnosis, but capped safely below the bloodworm
+      const you = clamp(rnd(10, Math.max(16, Math.round(r.avg * 0.7))), 4, worm - 6);
+      return { name, you, worm };
+    });
+    const wins = rows.filter(c => c.you > c.worm).length;   // ≈ 0, on purpose
+    const losses = rows.length - wins;
+    const gap = Math.round(rows.reduce((a, c) => a + (c.worm - c.you), 0) / rows.length);
+    const shame = clamp(gap + rnd(-3, 3), 40, 99);
+    const pool = shame >= 80 ? CMP_MSGS.high : shame >= 60 ? CMP_MSGS.mid : CMP_MSGS.low;
+    const msg = pool[rnd(0, pool.length - 1)];
+
+    const box = document.getElementById("cmpRows");
+    box.innerHTML = "";
+    rows.forEach((c, i) => {
+      const row = document.createElement("div");
+      row.className = "cmp-row";
+      row.innerHTML =
+        `<div class="cmp-name">${c.name}</div>` +
+        `<div class="cmp-line"><span class="cmp-who">あなた</span>` +
+          `<div class="cmp-track"><div class="cmp-fill you"></div></div><span class="cmp-val">${c.you}%</span></div>` +
+        `<div class="cmp-line"><span class="cmp-who">赤虫</span>` +
+          `<div class="cmp-track"><div class="cmp-fill worm"></div></div><span class="cmp-val">${c.worm}%</span></div>`;
+      box.appendChild(row);
+      const [youFill, wormFill] = row.querySelectorAll(".cmp-fill");
+      requestAnimationFrame(() => setTimeout(() => {
+        youFill.style.width = c.you + "%";
+        wormFill.style.width = c.worm + "%";
+      }, 200 + i * 130));
+    });
+
+    document.getElementById("cmpScore").textContent = `赤虫 ${losses}勝 ${wins}敗`;
+    document.getElementById("cmpShame").textContent = `ふがいなさ ${shame}%`;
+    document.getElementById("cmpMsg").textContent = msg;
+
+    r.compare = { rows, wins, losses, shame, msg };
   }
 
   // =========================================================
@@ -375,6 +448,14 @@
       ctx.fillText(sc.val + "%", W - 80, by);
       by += 56;
     });
+
+    // 赤虫との比較（ふがいなさ）
+    if (r.compare) {
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#a01f2e";
+      ctx.font = "bold 20px 'Hiragino Kaku Gothic ProN',sans-serif";
+      ctx.fillText(`赤虫に ${r.compare.losses}敗 ／ ふがいなさ ${r.compare.shame}%`, W / 2, by + 8);
+    }
 
     // footer
     ctx.textAlign = "center";
