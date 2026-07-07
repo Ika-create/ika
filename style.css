@@ -41,7 +41,7 @@ body::before{
   padding:16px 20px 10px;max-width:560px;width:100%;margin:0 auto;
 }
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:.2px;}
-.axo-mini{filter:drop-shadow(0 3px 5px rgba(220,120,150,.35));}
+.axo-mini{width:52px;height:auto;display:block;filter:drop-shadow(0 3px 5px rgba(220,120,150,.35));}
 .link-btn{
   background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--purple);
   font-size:12.5px;cursor:pointer;font-weight:700;padding:6px 12px;border-radius:20px;
@@ -93,6 +93,8 @@ body::before{
 }
 .axo-emoji{font-size:30px;animation:bobtiny 3s ease-in-out infinite;}
 .axo-emoji.big{font-size:34px;}
+.axo-tank{width:60px;height:auto;animation:bobtiny 3s ease-in-out infinite;}
+.axo-top{width:48px;height:auto;flex:0 0 auto;}
 @keyframes bobtiny{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
 
 .primary-btn{
@@ -166,11 +168,11 @@ body::before{
 /* axolotl sniffing around the pellet instead of the gentle swim */
 .axo-inspect{animation:inspect 2.1s ease-in-out infinite;}
 @keyframes inspect{
-  0%{left:4px;transform:translateY(-50%) scaleX(-1) rotate(0);}
-  35%{left:118px;transform:translateY(-60%) scaleX(-1) rotate(-6deg);}
-  52%{left:122px;transform:translateY(-40%) scaleX(-1) rotate(5deg);}
-  70%{left:60px;transform:translateY(-52%) scaleX(-1) rotate(0);}
-  100%{left:4px;transform:translateY(-50%) scaleX(-1) rotate(0);}
+  0%{left:4px;transform:translateY(-50%) rotate(0);}
+  35%{left:118px;transform:translateY(-60%) rotate(6deg);}
+  52%{left:122px;transform:translateY(-40%) rotate(-5deg);}
+  70%{left:60px;transform:translateY(-52%) rotate(0);}
+  100%{left:4px;transform:translateY(-50%) rotate(0);}
 }
 .scan-ring{
   position:absolute;right:22px;top:50%;width:94px;height:94px;transform:translateY(-50%);
@@ -214,8 +216,8 @@ body::before{
   background:linear-gradient(#ecdcb2,#dcc790);opacity:.9;
 }
 .axo-swim{
-  position:absolute;left:6px;top:50%;width:130px;
-  transform:translateY(-50%) scaleX(-1);
+  position:absolute;left:6px;top:50%;width:132px;height:auto;
+  transform:translateY(-50%);
   filter:drop-shadow(0 5px 7px rgba(0,40,60,.22));
   animation:swim 3.4s ease-in-out infinite;
 }

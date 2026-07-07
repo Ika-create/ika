@@ -269,24 +269,11 @@
     ctx.closePath();
   }
 
-  // axolotl drawn from the same coords as the on-page SVG (150x96 viewBox)
-  function drawAxolotl(ctx, ox, oy, scale, faceRight) {
-    ctx.save();
-    ctx.translate(ox, oy);
-    ctx.scale(faceRight ? -scale : scale, scale); // mirror to face right
-    ctx.lineCap = "round";
-    ctx.fillStyle = "#f8d4dc";
-    ctx.beginPath(); ctx.ellipse(70, 62, 58, 26, 0, 0, Math.PI * 2); ctx.fill(); // body
-    ctx.beginPath(); ctx.arc(34, 52, 22, 0, Math.PI * 2); ctx.fill();            // head
-    ctx.strokeStyle = "#f3a9bb"; ctx.lineWidth = 6;                              // gills
-    const gills = [[22,34,10,22],[34,30,31,14],[46,33,57,20],[22,70,10,82],[40,74,38,89]];
-    gills.forEach(([x1,y1,x2,y2]) => { ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
-    ctx.fillStyle = "#3a3a44";                                                   // eyes
-    ctx.beginPath(); ctx.arc(27, 50, 3.4, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(44, 50, 3.4, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "#c98a98"; ctx.lineWidth = 2.4;                            // mouth
-    ctx.beginPath(); ctx.moveTo(28, 60); ctx.quadraticCurveTo(35, 66, 42, 60); ctx.stroke();
-    ctx.restore();
+  // the axolotl artwork (u-pa.png), faces right — same asset used across the page
+  let _axoImg = null;
+  function axolotlImage() {
+    if (!_axoImg) _axoImg = loadImage("u-pa.png");
+    return _axoImg;
   }
 
   async function buildShareCanvas(r, photo) {
@@ -324,7 +311,11 @@
       [[120,70,7],[170,130,5],[110,150,4],[300,100,6]].forEach(([bx,by,br]) =>
         { ctx.beginPath(); ctx.arc(sx + bx, sy + by, br, 0, Math.PI * 2); ctx.fill(); });
       // axolotl on the left, facing the pellet
-      drawAxolotl(ctx, sx + 150, sy + sh / 2 - 44, 0.7, true);
+      try {
+        const axo = await axolotlImage();
+        const aw = 150, ah = aw * 190 / 300;
+        ctx.drawImage(axo, sx + 14, sy + (sh - ah) / 2, aw, ah);
+      } catch { /* ignore */ }
       // pellet (your face) on the right
       const ps = 132, px = sx + sw - ps - 26, py = sy + (sh - ps) / 2;
       if (photo) {
